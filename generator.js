@@ -17,19 +17,34 @@ if (!fs.existsSync(OUTPUT_DIR)) {
 // --- AI HELPERS ---
 
 async function generateScript(scenario, childDesc) {
-    console.log(`  🤖 AI (Text): Writing story for "${scenario}"...`);
+    console.log(`  🤖 AI (Text): Writing therapeutic story for "${scenario}"...`);
     const prompt = `
-    Write a 4-step social story for an autistic child about: "${scenario}".
+    Create a specialized "Therapeutic Social Story" for an autistic child about: "${scenario}".
     The child is: "${childDesc}".
-    
-    CRITICAL RULES:
-    1. Use simple, first-person language ("I walk...", "I see...").
-    2. Be positive, calm, and reassuring.
-    3. Return ONLY valid JSON in this format:
-    [
-      { "text": "Step 1 text", "image_prompt": "detailed visual description for DALL-E" },
-      ...
-    ]
+
+    FRAMEWORK:
+    - Use evidence-based Social Story principles: descriptive, perspective, and directive sentences.
+    - Focus on SENSORY PREP (what will I hear/feel?) and COPING STRATEGIES (breathing, squeezing hands).
+    - Include a PARENT COACHING TIP for each step.
+
+    STRUCTURE (6 Steps):
+    1. Preparation/Expectation (What is happening?)
+    2. Sensory Preview (What might be loud/bright/different?)
+    3. The Action/Transition (Doing the thing)
+    4. Coping Strategy (If I feel big feelings, I can...)
+    5. The Positive Outcome (It is over, I am safe)
+    6. Reinforcement (I did a great job)
+
+    RETURN JSON FORMAT:
+    {
+      "slides": [
+        {
+          "text": "First-person story text for the child (simple, literal).",
+          "image_prompt": "Visual description for DALL-E (calm, consistent character).",
+          "parent_tip": "Actionable advice for the parent for this moment."
+        }
+      ]
+    }
     `;
 
     const completion = await openai.chat.completions.create({
@@ -40,7 +55,7 @@ async function generateScript(scenario, childDesc) {
 
     const content = completion.choices[0].message.content;
     const parsed = JSON.parse(content);
-    return Array.isArray(parsed) ? parsed : (parsed.steps || parsed.slides || parsed.story);
+    return parsed.slides || parsed.steps || parsed.story;
 }
 
 async function generateImage(prompt) {
