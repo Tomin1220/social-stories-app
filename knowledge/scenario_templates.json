@@ -1,0 +1,158 @@
+{
+  "version": "2026-03-08",
+  "templates": [
+    {
+      "id": "going-to-the-dentist",
+      "matchers": ["dentist", "dental", "teeth"],
+      "goal_category": "reduce_disruptive",
+      "sensory_notes": ["bright overhead lights", "mint smells", "whirring tools"],
+      "coping_strategies": ["box breathing", "holding a weighted lap pad", "counting ceiling tiles"],
+      "slides": [
+        {
+          "focus": "Expectation",
+          "text": "Today I visit the dentist with a trusted grown-up. Dentists keep teeth healthy, and we go to see what will happen next.",
+          "image_prompt": "child walking into a friendly dental office with caregiver, calm colors, storybook style",
+          "parent_tip": "Preview the schedule card and remind the child that the visit keeps teeth strong.",
+          "sentence_types": ["descriptive", "affirmative", "cooperative"]
+        },
+        {
+          "focus": "Sensory Preview",
+          "text": "The waiting room may smell minty and sound quiet. I can sit on a comfy chair and hold my fidget while I wait.",
+          "image_prompt": "child sitting in dentist waiting room holding small fidget toy, gentle lighting",
+          "parent_tip": "Offer noise-reducing headphones or a fidget if the room is busy.",
+          "sentence_types": ["descriptive", "perspective", "control"]
+        },
+        {
+          "focus": "Transition",
+          "text": "When the hygienist says my name, I walk with them to the big chair. Grown-ups stay nearby and smile at me.",
+          "image_prompt": "dental hygienist greeting child, walking toward dental chair, encouraging expression",
+          "parent_tip": "Use a simple gesture cue (thumbs up) so the child knows you are close.",
+          "sentence_types": ["descriptive", "cooperative", "perspective"]
+        },
+        {
+          "focus": "Coping",
+          "text": "The light may feel bright, so I can wear cool sunglasses. If the tools hum, I breathe in for four counts and out for four counts.",
+          "image_prompt": "child wearing sunglasses in dental chair, dentist nearby with small mirror",
+          "parent_tip": "Model the breathing script together before tools begin.",
+          "sentence_types": ["descriptive", "directive", "control"]
+        },
+        {
+          "focus": "Outcome",
+          "text": "When the dentist checks my teeth, I keep my hands on my lap and stay as still as I can. The exam is short and helps my smile.",
+          "image_prompt": "dentist calmly examining child's teeth, child relaxed with hands on lap",
+          "parent_tip": "Offer a silent countdown using fingers so the child knows how much time is left.",
+          "sentence_types": ["descriptive", "directive", "affirmative"]
+        },
+        {
+          "focus": "Reinforcement",
+          "text": "After we finish, I rinse, sit up slowly, and choose a sticker. I did hard work and can feel proud of taking care of my teeth.",
+          "image_prompt": "child receiving sticker from dental assistant, smiling proudly",
+          "parent_tip": "Celebrate effort over perfection—name one strategy the child used well.",
+          "sentence_types": ["affirmative", "perspective", "control"]
+        }
+      ]
+    },
+    {
+      "id": "haircut-day",
+      "matchers": ["haircut", "barber", "salon"],
+      "goal_category": "reduce_disruptive",
+      "sensory_notes": ["clipper buzz", "scissors near ears", "hair on skin"],
+      "coping_strategies": ["deep pressure squeeze", "choice of cape", "shaking hair off with towel"],
+      "slides": [
+        {
+          "focus": "Expectation",
+          "text": "Haircut day keeps my hair neat so I can see and play. A stylist trims a little bit at a time.",
+          "image_prompt": "child entering salon with caregiver, stylist waving hello",
+          "parent_tip": "Show a before/after picture or mirror selfie to anchor the goal.",
+          "sentence_types": ["descriptive", "affirmative"]
+        },
+        {
+          "focus": "Sensory Preview",
+          "text": "The salon may have hair dryers, mirrors, and soft music. I can wear a comfy cape or ask for a towel instead.",
+          "image_prompt": "child sitting in salon chair with cape, observing mirrors and lights",
+          "parent_tip": "Pack a preferred cape or t-shirt clip if textures bother the child.",
+          "sentence_types": ["descriptive", "directive", "cooperative"]
+        },
+        {
+          "focus": "Transition",
+          "text": "When it is my turn, I climb into the chair and place my feet on the bar. I can hold a small fidget in one hand.",
+          "image_prompt": "child sitting in salon chair gripping small fidget, stylist preparing tools",
+          "parent_tip": "Offer a weighted lap pad or gentle hand squeeze for grounding.",
+          "sentence_types": ["descriptive", "directive", "control"]
+        },
+        {
+          "focus": "Coping",
+          "text": "Scissors make quiet snips near my ears. If I feel tickly, I take a deep breath and say, 'Please brush the hair off, thank you.'",
+          "image_prompt": "stylist trimming child's hair, child practicing calm breathing",
+          "parent_tip": "Coach the polite script beforehand and echo it calmly if needed.",
+          "sentence_types": ["descriptive", "directive", "perspective"]
+        },
+        {
+          "focus": "Outcome",
+          "text": "Loose hair might fall on my neck. I can ask for a soft brush or towel so it feels better while we finish.",
+          "image_prompt": "child smiling while stylist brushes hair off neck with towel",
+          "parent_tip": "Pack hypoallergenic wipes or a damp cloth for quick cleanup.",
+          "sentence_types": ["descriptive", "directive", "cooperative"]
+        },
+        {
+          "focus": "Reinforcement",
+          "text": "When the haircut is done, I thank the stylist and look in the mirror. I did it! Clean hair helps me feel fresh and ready.",
+          "image_prompt": "child admiring new haircut in mirror, caregiver smiling",
+          "parent_tip": "Name one coping tool the child used so it sticks for next time.",
+          "sentence_types": ["affirmative", "perspective", "control"]
+        }
+      ]
+    },
+    {
+      "id": "fire-drill",
+      "matchers": ["fire drill", "alarm", "school drill"],
+      "goal_category": "increase_desired",
+      "sensory_notes": ["loud alarm", "crowded hallway", "cool weather outside"],
+      "coping_strategies": ["hands over ears", "following line leader", "counting steps"],
+      "slides": [
+        {
+          "focus": "Expectation",
+          "text": "Sometimes my school practices a fire drill. It is a safety rehearsal so everyone knows where to go.",
+          "image_prompt": "students lined up in classroom preparing for drill, teacher explaining calmly",
+          "parent_tip": "Review the school map or photo of the meeting spot before the day starts.",
+          "sentence_types": ["descriptive", "affirmative"]
+        },
+        {
+          "focus": "Sensory Preview",
+          "text": "The alarm is loud like a beeping robot. I can cover my ears or wear headphones while we walk.",
+          "image_prompt": "child covering ears gently while alarm lights flash, teacher guiding",
+          "parent_tip": "Coordinate with school so headphones are stored near the desk.",
+          "sentence_types": ["descriptive", "directive", "control"]
+        },
+        {
+          "focus": "Transition",
+          "text": "When the alarm beeps, I stand up, line up behind the line leader, and keep my hands by my sides.",
+          "image_prompt": "students forming line, child following visual footstep markers",
+          "parent_tip": "Practice a short lining-up routine at home with a timer for muscle memory.",
+          "sentence_types": ["directive", "descriptive"]
+        },
+        {
+          "focus": "Coping",
+          "text": "Hallways might feel busy. I look at the person in front of me and take bunny breaths (short nose breaths) until we reach outside.",
+          "image_prompt": "child in hallway focusing on peer ahead, taking calm breaths",
+          "parent_tip": "Teach bunny breaths with a visual card clipped to the backpack.",
+          "sentence_types": ["perspective", "directive", "control"]
+        },
+        {
+          "focus": "Outcome",
+          "text": "Outside, we stand on our class spot while teachers count. I stay quiet so they hear names.",
+          "image_prompt": "class lined up outside school, teacher holding clipboard",
+          "parent_tip": "Celebrate with a small movement break when the child returns indoors.",
+          "sentence_types": ["descriptive", "directive", "cooperative"]
+        },
+        {
+          "focus": "Reinforcement",
+          "text": "When the drill ends, the alarm stops and we walk back calmly. Practicing helps keep everyone safe, and I can feel proud of following the plan.",
+          "image_prompt": "students walking back inside calmly, child smiling",
+          "parent_tip": "Reflect on one success (“You covered your ears and stayed in line”) to reinforce confidence.",
+          "sentence_types": ["affirmative", "perspective", "control"]
+        }
+      ]
+    }
+  ]
+}
