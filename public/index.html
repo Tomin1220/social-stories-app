@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Social Stories Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="AI-powered social stories for autistic children — evidence-based, sensory-aware, and caregiver-guided.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* ───────────── RESET & TOKENS ───────────── */
+        :root {
+            --p: #5b6ef5;
+            --p2: #7c3aed;
+            --g: #10b981;
+            --r: #f87171;
+            --bg: #f0f2ff;
+            --card: #ffffff;
+            --ink: #0f172a;
+            --muted: #64748b;
+            --border: rgba(91,110,245,0.13);
+            --shadow: 0 20px 60px rgba(15,23,42,0.07);
+            --radius: 24px;
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        a { color: var(--p); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        img { display: block; max-width: 100%; }
+
+        /* ───────────── HEADER ───────────── */
+        .header {
+            position: sticky; top: 0; z-index: 200;
+            backdrop-filter: blur(20px) saturate(180%);
+            background: rgba(240,242,255,0.85);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 28px;
+            display: flex; align-items: center; justify-content: space-between; gap: 12px;
+        }
+        .brand {
+            font-weight: 800; font-size: 17px;
+            display: flex; align-items: center; gap: 10px; white-space: nowrap;
+            background: linear-gradient(135deg, var(--p2), var(--p));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .brand-icon { font-size: 22px; -webkit-text-fill-color: initial; }
+        nav { display: flex; gap: 4px; flex-wrap: wrap; }
+        nav a {
+            font-size: 14px; font-weight: 500; color: var(--muted);
+            padding: 7px 14px; border-radius: 999px;
+            transition: background .2s, color .2s;
+        }
+        nav a:hover { background: rgba(91,110,245,0.1); color: var(--p); text-decoration: none; }
+
+        /* ───────────── LAYOUT ───────────── */
+        .page { max-width: 1120px; margin: 0 auto; padding: 40px 20px 100px; display: flex; flex-direction: column; gap: 28px; }
+        .card { background: var(--card); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); }
+
+        /* ───────────── HERO ───────────── */
+        .hero {
+            background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%);
+            color: white; border-radius: var(--radius);
+            padding: 60px 48px; position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(124,58,237,0.35), transparent);
+            pointer-events: none;
+        }
+        .hero-inner { position: relative; display: grid; grid-template-columns: 1fr 380px; gap: 48px; align-items: center; }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            padding: 6px 14px; border-radius: 999px;
+            font-size: 13px; font-weight: 500; color: #c7d2fe;
+            margin-bottom: 20px;
+        }
+        .hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: #818cf8; display: block; }
+        .hero h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 18px; letter-spacing: -1px; }
+        .hero h1 em { font-style: normal; background: linear-gradient(90deg, #818cf8, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-sub { font-size: 17px; color: #94a3b8; line-height: 1.7; margin-bottom: 32px; max-width: 440px; }
+        .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn { padding: 13px 26px; border-radius: 999px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: transform .2s, box-shadow .2s, background .2s; display: inline-flex; align-items: center; gap: 8px; }
+        .btn:active { transform: scale(0.97) !important; }
+        .btn-hero { background: white; color: var(--ink); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .btn-hero:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,0.25); }
+        .btn-ghost { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-ghost:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
+        .hero-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
+        .stat { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 16px; text-align: center; backdrop-filter: blur(8px); }
+        .stat-num { font-size: 26px; font-weight: 800; color: #a78bfa; }
+        .stat-label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
+        .hero-badges { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+        .hero-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #cbd5e1; }
+        .hero-badge-icon { font-size: 18px; width: 32px; text-align: center; }
+
+        /* ───────────── HOW IT WORKS ───────────── */
+        .how-header { text-align: center; margin-bottom: 32px; }
+        .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--p); margin-bottom: 10px; }
+        .section-title { font-size: 30px; font-weight: 800; margin-bottom: 10px; }
+        .section-sub { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 520px; margin: 0 auto; }
+        .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+        .step {
+            background: #f8f9ff; border-radius: 20px; padding: 28px;
+            border: 1px solid var(--border); position: relative;
+            transition: transform .2s, box-shadow .2s;
+        }
+        .step:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(91,110,245,0.12); }
+        .step-num {
+            width: 40px; height: 40px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--p2), var(--p));
+            color: white; font-size: 15px; font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 16px;
+        }
+        .step h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .step p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+        .step-connector {
+            position: absolute; top: 32px; right: -14px;
+            width: 28px; height: 2px; background: var(--border); z-index: 1;
+        }
+
+        /* ───────────── GENERATOR ───────────── */
+        .gen-layout { display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
+        .gen-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+        .gen-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+
+        /* Chips */
+        .chips-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+        .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+        .chip {
+            padding: 7px 16px; border-radius: 999px;
+            font-size: 13px; font-weight: 500;
+            background: #eff0ff; color: var(--p);
+            border: 1.5px solid transparent; cursor: pointer;
+            transition: all .2s;
+        }
+        .chip:hover, .chip.active { background: var(--p); color: white; border-color: var(--p); transform: translateY(-1px); }
+
+        /* Form */
+        .form-group { margin-bottom: 18px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 7px; }
+        .form-input {
+            width: 100%; padding: 14px 16px;
+            border-radius: 16px; border: 2px solid #e0e7ff;
+            font-size: 15px; font-family: inherit;
+            background: #fafaff; color: var(--ink);
+            transition: border .2s, box-shadow .2s; outline: none;
+        }
+        .form-input:focus { border-color: var(--p); box-shadow: 0 0 0 4px rgba(91,110,245,0.1); }
+        textarea.form-input { min-height: 100px; resize: vertical; }
+
+        .btn-generate {
+            width: 100%; padding: 16px;
+            background: linear-gradient(135deg, var(--p2), var(--p));
+            color: white; border: none; border-radius: 16px;
+            font-size: 17px; font-weight: 700; cursor: pointer;
+            box-shadow: 0 12px 32px rgba(91,110,245,0.4);
+            transition: transform .2s, box-shadow .2s;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(91,110,245,0.45); }
+        .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Progress */
+        .progress-box {
+            display: none; margin-top: 20px; padding: 20px;
+            background: #f8f9ff; border-radius: 16px; border: 1.5px solid #e0e7ff;
+        }
+        .progress-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+        .progress-step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+        .progress-step.active { color: var(--p); font-weight: 600; }
+        .progress-step.done { color: var(--g); }
+        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; flex-shrink: 0; transition: background .3s; }
+        .progress-step.active .step-dot { background: var(--p); box-shadow: 0 0 0 3px rgba(91,110,245,0.2); }
+        .progress-step.done .step-dot { background: var(--g); }
+        .progress-track { height: 8px; background: #e0e7ff; border-radius: 999px; overflow: hidden; }
+        .progress-fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, var(--p2), var(--p)); transition: width .5s cubic-bezier(.4,0,.2,1); }
+
+        /* Result */
+        .result-box { display: none; margin-top: 20px; }
+        .result-card { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1.5px solid #6ee7b7; border-radius: 20px; padding: 24px; }
+        .result-card h4 { color: #065f46; font-size: 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .result-links { display: flex; flex-direction: column; gap: 10px; }
+        .btn-result { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: white; }
+        .btn-result.primary { background: var(--g); box-shadow: 0 6px 18px rgba(16,185,129,0.35); }
+        .btn-result.secondary { background: #6b7280; }
+        .btn-result:hover { opacity: 0.9; transform: translateY(-1px); }
+
+        /* Profiles Panel */
+        .profiles-card { background: #f8f9ff; border-radius: 20px; padding: 22px; border: 1.5px solid var(--border); }
+        .profiles-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .profile-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; min-height: 40px; }
+        .profile-item {
+            padding: 10px 14px; background: white; border: 1.5px solid var(--border);
+            border-radius: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            transition: border .2s, box-shadow .2s;
+        }
+        .profile-item:hover { border-color: var(--p); box-shadow: 0 4px 12px rgba(91,110,245,0.1); }
+        .profile-name { font-weight: 600; font-size: 13px; }
+        .profile-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
+        .profile-del { background: none; border: none; color: #fca5a5; cursor: pointer; font-size: 16px; padding: 2px 4px; border-radius: 6px; transition: background .2s; }
+        .profile-del:hover { background: #fee2e2; }
+        .profile-empty { font-size: 13px; color: var(--muted); text-align: center; padding: 16px; background: white; border-radius: 12px; border: 1.5px dashed #d1d5db; }
+        .btn-save-profile {
+            width: 100%; padding: 10px; border-radius: 12px;
+            background: white; color: var(--p); border: 1.5px solid var(--p);
+            font-weight: 600; font-size: 13px; cursor: pointer; transition: background .2s;
+        }
+        .btn-save-profile:hover { background: #eff0ff; }
+
+        /* ───────────── LIBRARY ───────────── */
+        .lib-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+        .lib-search { padding: 10px 16px; border-radius: 999px; border: 1.5px solid var(--border); font-size: 14px; font-family: inherit; outline: none; min-width: 200px; background: #fafaff; transition: border .2s; }
+        .lib-search:focus { border-color: var(--p); }
+        .lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px,1fr)); gap: 18px; }
+        .story-card {
+            background: white; border-radius: 20px; overflow: hidden;
+            border: 1.5px solid var(--border);
+            transition: transform .2s, box-shadow .2s;
+            display: flex; flex-direction: column;
+        }
+        .story-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(15,23,42,0.1); }
+        .story-thumb { width: 100%; height: 155px; object-fit: cover; }
+        .story-thumb-ph { width: 100%; height: 155px; background: linear-gradient(135deg, #e0e7ff, #ede9fe); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .story-body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
+        .story-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .story-meta { font-size: 12px; color: var(--muted); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .story-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; flex: 1; }
+        .tag { font-size: 11px; padding: 2px 9px; border-radius: 999px; background: #eff0ff; color: var(--p); font-weight: 500; }
+        .tag.green { background: #d1fae5; color: #065f46; }
+        .btn-view {
+            display: block; text-align: center; padding: 9px;
+            background: var(--p); color: white;
+            border-radius: 12px; font-weight: 600; font-size: 13px;
+            transition: background .2s;
+        }
+        .btn-view:hover { background: var(--p2); text-decoration: none; }
+        .lib-empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; }
+        .lib-empty-icon { font-size: 52px; margin-bottom: 16px; }
+        .lib-empty p { color: var(--muted); font-size: 15px; }
+
+        /* ───────────── RESEARCH ───────────── */
+        .research-list { display: grid; gap: 14px; }
+        .research-item {
+            padding: 20px; background: #fafaff; border-radius: 18px;
+            border: 1.5px solid var(--border); display: flex; gap: 16px; align-items: flex-start;
+            transition: border .2s;
+        }
+        .research-item:hover { border-color: var(--p); }
+        .research-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
+        .research-content strong { font-size: 15px; font-weight: 700; display: block; margin-bottom: 5px; }
+        .research-content p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 8px; }
+        .research-link { font-size: 13px; font-weight: 600; }
+
+        /* ───────────── TOAST ───────────── */
+        #toast {
+            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
+            background: var(--ink); color: white;
+            padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 500;
+            z-index: 9999; transition: transform .3s cubic-bezier(.4,0,.2,1), opacity .3s;
+            opacity: 0; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+        }
+        #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* ───────────── FOOTER ───────────── */
+        footer { text-align: center; color: var(--muted); font-size: 13px; padding: 20px; }
+
+        /* ───────────── ANIMATIONS ───────────── */
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-up { animation: fadeUp .5s ease both; }
+        .delay-1 { animation-delay: .1s; }
+        .delay-2 { animation-delay: .2s; }
+        .delay-3 { animation-delay: .3s; }
+
+        /* ───────────── RESPONSIVE ───────────── */
+        @media (max-width: 960px) {
+            .hero-inner { grid-template-columns: 1fr; }
+            .hero { padding: 44px 32px; }
+            .hero h1 { font-size: 36px; }
+            .steps { grid-template-columns: 1fr 1fr; }
+            .step-connector { display: none; }
+            .gen-layout { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 640px) {
+            .page { padding: 24px 14px 80px; gap: 18px; }
+            .card { padding: 24px; border-radius: 20px; }
+            .hero { padding: 32px 24px; border-radius: 20px; }
+            .hero h1 { font-size: 28px; }
+            .hero-ctas { flex-direction: column; }
+            .btn-hero, .btn-ghost { width: 100%; justify-content: center; }
+            .hero-stats { grid-template-columns: repeat(3,1fr); gap: 8px; }
+            .stat-num { font-size: 20px; }
+            .steps { grid-template-columns: 1fr; }
+            .header { padding: 12px 16px; }
+            nav a { padding: 6px 10px; font-size: 13px; }
+            .section-title { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+    <div class="brand"><span class="brand-icon">⚡</span>Social Stories Studio</div>
+    <nav>
+        <a href="#generate">Generate</a>
+        <a href="#library">Library</a>
+        <a href="#research">Research</a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-inner">
+            <div class="fade-up">
+                <div class="hero-eyebrow"><span></span>Evidence-based · OT-informed · Caregiver-guided</div>
+                <h1>Stories that rehearse <em>courage.</em></h1>
+                <p class="hero-sub">AI-powered social stories for autistic children — with sensory previews, coping scripts, and caregiver coaching built into every slide.</p>
+                <div class="hero-ctas">
+                    <button class="btn btn-hero" onclick="scrollTo('generate')">✨ Create a Story</button>
+                    <button class="btn btn-ghost" onclick="scrollTo('library')">📚 Story Library</button>
+                </div>
+                <div class="hero-stats" style="margin-top:32px;">
+                    <div class="stat"><div class="stat-num">6</div><div class="stat-label">Story Steps</div></div>
+                    <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Studies Cited</div></div>
+                    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Scenarios</div></div>
+                </div>
+            </div>
+            <div class="fade-up delay-2">
+                <div class="hero-badges">
+                    <div class="hero-badge"><span class="hero-badge-icon">🧠</span>Carol Gray Social Stories™ 10.2 criteria</div>
+                    <div class="hero-badge"><span class="hero-badge-icon">🎨</span>AI-generated calm illustrations per slide</div>
+                    <div class="hero-badge"><span class="hero-badge-icon">🔊</span>Narrated audio for every story</div>
+                    <div class="hero-badge"><span class="hero-badge-icon">📋</span>Caregiver coaching tip on each scene</div>
+                    <div class="hero-badge"><span class="hero-badge-icon">🌱</span>Future nonprofit access for all families</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="card fade-up">
+        <div class="how-header">
+            <div class="section-label">Process</div>
+            <div class="section-title">How it works</div>
+            <p class="section-sub">Three steps to a full therapeutic story with visuals, narration, and caregiver notes.</p>
+        </div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <h4>Choose a scenario</h4>
+                <p>Pick a preset or describe any real-life moment. Curated templates skip the AI wait entirely.</p>
+                <div class="step-connector"></div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <h4>Personalize the child</h4>
+                <p>Save child profiles with name, age, interests, and sensory notes. Reuse in one tap next time.</p>
+                <div class="step-connector"></div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <h4>Share & rehearse</h4>
+                <p>Open the slideshow, play the narration, and follow caregiver tips before the real event.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- GENERATOR -->
+    <section class="card" id="generate">
+        <div class="gen-layout">
+            <div>
+                <div class="gen-title">✨ Generate a story</div>
+                <p class="gen-sub">Curated scenarios are instant. Custom inputs use GPT-4o-mini with smart caching to save cost.</p>
+
+                <div class="form-group">
+                    <div class="chips-label">Quick scenarios</div>
+                    <div class="chips" id="chips"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="scenarioInput">Or describe your own scenario</label>
+                    <input class="form-input" type="text" id="scenarioInput" placeholder="e.g., First day of school, Airport, Birthday party" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="childInput">Describe the child</label>
+                    <textarea class="form-input" id="childInput" placeholder="Name, age, interests, sensory notes (e.g., Sam, 6, loves rockets, sensitive to buzzers)"></textarea>
+                </div>
+
+                <button class="btn-generate" id="generateBtn" onclick="generateStory()">
+                    <span id="genBtnText">Generate story 🪄</span>
+                </button>
+
+                <!-- PROGRESS -->
+                <div class="progress-box" id="progressBox">
+                    <div class="progress-steps" id="progressSteps">
+                        <div class="progress-step" id="pStep0"><span class="step-dot"></span>Writing script...</div>
+                        <div class="progress-step" id="pStep1"><span class="step-dot"></span>Generating illustrations...</div>
+                        <div class="progress-step" id="pStep2"><span class="step-dot"></span>Creating narration...</div>
+                        <div class="progress-step" id="pStep3"><span class="step-dot"></span>Building slideshow...</div>
+                    </div>
+                    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+                </div>
+
+                <!-- RESULT -->
+                <div class="result-box" id="resultBox">
+                    <div class="result-card">
+                        <h4>🎉 Story is ready!</h4>
+                        <div class="result-links" id="resultLinks"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROFILES -->
+            <div>
+                <div class="profiles-card">
+                    <h4>👧 Child Profiles</h4>
+                    <div class="profile-list" id="profileList"></div>
+                    <button class="btn-save-profile" onclick="saveProfile()">+ Save as profile</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- LIBRARY -->
+    <section class="card" id="library">
+        <div class="lib-header">
+            <div>
+                <div class="section-label">Archive</div>
+                <div class="section-title" style="margin-bottom:0">Story Library</div>
+            </div>
+            <input class="lib-search" id="libSearch" placeholder="🔍  Search stories..." oninput="filterLibrary(this.value)" />
+        </div>
+        <div class="lib-grid" id="libraryGrid">
+            <div class="lib-empty"><div class="lib-empty-icon">📖</div><p>Loading stories...</p></div>
+        </div>
+    </section>
+
+    <!-- RESEARCH -->
+    <section class="card" id="research">
+        <div class="how-header">
+            <div class="section-label">Evidence Base</div>
+            <div class="section-title">Research & Studies</div>
+            <p class="section-sub">Templates follow best practices from peer-reviewed Social Stories™ literature.</p>
+        </div>
+        <div class="research-list">
+            <div class="research-item">
+                <span class="research-icon">🔬</span>
+                <div class="research-content">
+                    <strong>Scoping review: Social Stories supporting behavior change (2023)</strong>
+                    <p>J Occup Ther Sch Early Interv — 56 studies grouped by "reduce disruptive" vs "increase desired" goals. Highlights sensory previews + coping rehearsal as key efficacy factors.</p>
+                    <a class="research-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11263915/" target="_blank">Read summary →</a>
+                </div>
+            </div>
+            <div class="research-item">
+                <span class="research-icon">🏫</span>
+                <div class="research-content">
+                    <strong>ASSSIST-2 RCT: Social Stories™ in UK primary schools (2024–25)</strong>
+                    <p>Health Technol Assess — pragmatic cluster trial showing individual socio-emotional goals improve with high-fidelity, teacher co-authored, personalized stories across 4–6 read-throughs.</p>
+                    <a class="research-link" href="https://www.ncbi.nlm.nih.gov/books/NBK606433/" target="_blank">Read summary →</a>
+                </div>
+            </div>
+            <div class="research-item">
+                <span class="research-icon">💰</span>
+                <div class="research-content">
+                    <strong>Cost–utility analysis of Social Stories™ (2024)</strong>
+                    <p>BJPsych Open — demonstrates a favorable cost-per-outcome ratio compared to other supports in mainstream schools, supporting digital delivery platforms.</p>
+                    <a class="research-link" href="https://www.cambridge.org/core/journals/bjpsych-open" target="_blank">Read summary →</a>
+                </div>
+            </div>
+            <div class="research-item">
+                <span class="research-icon">📚</span>
+                <div class="research-content">
+                    <strong>Social Story research scoping study — 17 literature reviews (2021)</strong>
+                    <p>Review Journal of Autism & Developmental Disorders — synthesizes Gray sentence ratios, cooperative sentences, and implementation fidelity requirements.</p>
+                    <a class="research-link" href="https://link.springer.com/article/10.1007/s40489-020-00235-6" target="_blank">Read summary →</a>
+                </div>
+            </div>
+            <div class="research-item">
+                <span class="research-icon">🎓</span>
+                <div class="research-content">
+                    <strong>Effectiveness of Social Stories as behavior intervention (2022)</strong>
+                    <p>St. Cloud State University — 13 case studies covering dentist visits, haircuts, transitions with measurable outcomes across age groups.</p>
+                    <a class="research-link" href="https://repository.stcloudstate.edu/sped_etds/155/" target="_blank">Read summary →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>Social Stories Studio · Research-aligned narratives for neurodivergent brilliance.</footer>
+<div id="toast"></div>
+
+<script>
+// ── UTILS ────────────────────────────────────────────────
+function scrollTo(id) { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function uid() { return Math.random().toString(36).substring(2, 10); }
+function toast(msg, duration = 3000) {
+    const el = document.getElementById('toast');
+    el.textContent = msg; el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), duration);
+}
+
+// ── CHIPS ────────────────────────────────────────────────
+const SCENARIOS = ['Going to the Dentist','Haircut Day','Fire Drill','First Day of School','Grocery Store','Doctor Visit','Airplane Ride','New Baby Sibling','Birthday Party','Waiting in Line'];
+const chipsEl = document.getElementById('chips');
+SCENARIOS.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'chip'; btn.textContent = s;
+    btn.onclick = () => {
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById('scenarioInput').value = s;
+    };
+    chipsEl.appendChild(btn);
+});
+
+// ── PROFILES ─────────────────────────────────────────────
+function getProfiles() { try { return JSON.parse(localStorage.getItem('ss_profiles') || '[]'); } catch(e) { return []; } }
+function setProfiles(p) { localStorage.setItem('ss_profiles', JSON.stringify(p)); }
+
+function renderProfiles() {
+    const list = document.getElementById('profileList');
+    const profiles = getProfiles();
+    if (!profiles.length) {
+        list.innerHTML = '<div class="profile-empty">No saved profiles yet</div>';
+        return;
+    }
+    list.innerHTML = profiles.map(p => `
+        <div class="profile-item" onclick="loadProfile('${p.id}')">
+            <div>
+                <div class="profile-name">${p.name}</div>
+                <div class="profile-detail">${p.description.substring(0,48)}${p.description.length > 48 ? '…' : ''}</div>
+            </div>
+            <button class="profile-del" onclick="event.stopPropagation();deleteProfile('${p.id}')" title="Remove">✕</button>
+        </div>`).join('');
+}
+
+function saveProfile() {
+    const desc = document.getElementById('childInput').value.trim();
+    if (!desc) { toast('⚠️ Enter a child description first.'); return; }
+    const name = desc.split(',')[0].trim() || 'Child';
+    const profiles = getProfiles();
+    if (profiles.find(p => p.description === desc)) { toast('Profile already saved!'); return; }
+    profiles.unshift({ id: uid(), name, description: desc, savedAt: new Date().toISOString() });
+    setProfiles(profiles.slice(0, 10));
+    renderProfiles();
+    toast('✅ Profile saved!');
+}
+
+function loadProfile(id) {
+    const p = getProfiles().find(x => x.id === id);
+    if (p) { document.getElementById('childInput').value = p.description; toast('Profile loaded!'); }
+}
+
+function deleteProfile(id) {
+    setProfiles(getProfiles().filter(p => p.id !== id));
+    renderProfiles();
+    toast('Profile removed.');
+}
+
+renderProfiles();
+
+// ── PROGRESS STEP TRACKER ────────────────────────────────
+function setProgressStep(stage, pct) {
+    const map = { script: 0, image: 1, audio: 2, html: 3 };
+    const idx = map[stage] ?? -1;
+    document.querySelectorAll('.progress-step').forEach((el, i) => {
+        el.classList.remove('active', 'done');
+        if (i < idx) el.classList.add('done');
+        else if (i === idx) el.classList.add('active');
+    });
+    document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ── GENERATION ───────────────────────────────────────────
+let evtSource = null;
+
+function generateStory() {
+    const scenario = document.getElementById('scenarioInput').value.trim();
+    const child = document.getElementById('childInput').value.trim();
+    if (!scenario || !child) { toast('⚠️ Please fill in both fields.'); return; }
+
+    const btn = document.getElementById('generateBtn');
+    const progressBox = document.getElementById('progressBox');
+    const resultBox = document.getElementById('resultBox');
+    const fill = document.getElementById('progressFill');
+
+    btn.disabled = true;
+    document.getElementById('genBtnText').textContent = 'Generating…';
+    resultBox.style.display = 'none';
+    progressBox.style.display = 'block';
+    fill.style.width = '5%';
+    fill.style.background = 'linear-gradient(90deg, var(--p2), var(--p))';
+    document.querySelectorAll('.progress-step').forEach(el => el.classList.remove('active','done'));
+
+    const jobId = uid();
+    if (evtSource) evtSource.close();
+    evtSource = new EventSource('/progress/' + jobId);
+    evtSource.onmessage = (e) => {
+        const d = JSON.parse(e.data);
+        setProgressStep(d.stage, d.pct);
+        if (d.stage === 'error') {
+            fill.style.background = 'var(--r)';
+            btn.disabled = false;
+            document.getElementById('genBtnText').textContent = 'Generate story 🪄';
+            evtSource.close();
+            toast('❌ ' + d.message);
+        }
+    };
+    evtSource.onerror = () => evtSource.close();
+
+    fetch('/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ scenario, child, jobId })
+    })
+    .then(r => r.json())
+    .then(data => {
+        evtSource.close();
+        btn.disabled = false;
+        document.getElementById('genBtnText').textContent = 'Generate story 🪄';
+
+        if (!data.success) {
+            fill.style.background = 'var(--r)';
+            toast('❌ ' + data.error);
+            return;
+        }
+
+        fill.style.width = '100%';
+        setTimeout(() => { progressBox.style.display = 'none'; }, 700);
+        resultBox.style.display = 'block';
+        document.getElementById('resultLinks').innerHTML =
+            `<a href="${data.url}" target="_blank" class="btn-result primary">📖 Open story slideshow</a>` +
+            (data.audio ? `<a href="${data.audio}" target="_blank" class="btn-result secondary">🔊 Download narration</a>` : '');
+        toast('🎉 Story created!');
+        loadLibrary();
+        document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    })
+    .catch(err => {
+        evtSource.close();
+        btn.disabled = false;
+        document.getElementById('genBtnText').textContent = 'Generate story 🪄';
+        fill.style.background = 'var(--r)';
+        toast('❌ ' + err.message);
+    });
+}
+
+// ── LIBRARY ──────────────────────────────────────────────
+let allStories = [];
+
+function renderLibrary(stories) {
+    const grid = document.getElementById('libraryGrid');
+    if (!stories.length) {
+        grid.innerHTML = `<div class="lib-empty"><div class="lib-empty-icon">📖</div><p>No stories yet — generate one above!</p></div>`;
+        return;
+    }
+    grid.innerHTML = stories.map(s => {
+        const thumb = s.cover_image || s.slides?.[0]?.image_url;
+        const date = new Date(s.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+        const badgeType = s.template_id ? '<span class="tag green">Curated</span>' : '<span class="tag">AI</span>';
+        return `<div class="story-card">
+            ${thumb ? `<img src="${thumb}" class="story-thumb" loading="lazy" alt="${s.scenario}">` : `<div class="story-thumb-ph">📖</div>`}
+            <div class="story-body">
+                <div class="story-title">${s.scenario}</div>
+                <div class="story-meta">For: ${s.child_description}</div>
+                <div class="story-tags">${badgeType}<span class="tag">${date}</span></div>
+                <a href="/stories/story-${s.id}.html" target="_blank" class="btn-view">View Story →</a>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function filterLibrary(q) {
+    const term = q.toLowerCase();
+    renderLibrary(allStories.filter(s =>
+        s.scenario.toLowerCase().includes(term) ||
+        s.child_description.toLowerCase().includes(term)
+    ));
+}
+
+function loadLibrary() {
+    fetch('/library').then(r => r.json()).then(stories => {
+        allStories = stories;
+        renderLibrary(stories);
+    }).catch(() => {
+        document.getElementById('libraryGrid').innerHTML = '<div class="lib-empty"><div class="lib-empty-icon">⚠️</div><p>Could not load library.</p></div>';
+    });
+}
+
+loadLibrary();
+</script>
+</body>
+</html>
