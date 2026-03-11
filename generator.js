@@ -110,7 +110,7 @@ Return strict JSON:
     }, 3, 'generateScript');
 }
 
-async function generateImage(prompt) {
+async function generateImage(prompt, localFileName) {
     return await withRetry(async () => {
         const response = await openai.images.generate({
             model: "dall-e-3",
@@ -119,7 +119,27 @@ async function generateImage(prompt) {
             size: "1024x1024",
             quality: "standard",
         });
-        return response.data[0].url;
+        const remoteUrl = response.data[0].url;
+
+        // Download and save locally so the URL never expires
+        if (localFileName) {
+            try {
+                const https = require('https');
+                const localPath = path.join(OUTPUT_DIR, localFileName);
+                await new Promise((resolve, reject) => {
+                    const file = require('fs').createWriteStream(localPath);
+                    https.get(remoteUrl, res => {
+                        res.pipe(file);
+                        file.on('finish', () => { file.close(); resolve(); });
+                    }).on('error', reject);
+                });
+                return `/stories/${localFileName}`;
+            } catch (e) {
+                console.warn(`  ⚠️  Could not save image locally: ${e.message}`);
+                return remoteUrl; // fall back to remote URL
+            }
+        }
+        return remoteUrl;
     }, 3, `generateImage: ${prompt.substring(0, 30)}`);
 }
 
@@ -255,9 +275,10 @@ async function createStory(scenario, childDesc, onProgress) {
         const imagePrompt = step.image_prompt || `${scenario} scene, calm storybook illustration`;
         const pct = 20 + Math.round(((i + 1) / scriptSlides.length) * 55);
         onProgress && onProgress('image', `Drawing scene ${i + 1} of ${scriptSlides.length}...`, pct);
+        const localImgFile = `img-${id}-${i}.png`;
         let imageUrl;
         try {
-            imageUrl = await generateImage(imagePrompt);
+            imageUrl = await generateImage(imagePrompt, localImgFile);
         } catch (e) {
             console.warn(`Image failed for slide ${i + 1}, using placeholder`);
             imageUrl = `https://placehold.co/1024x1024/e0e7ff/4c5df9?text=Scene+${i + 1}`;
@@ -271,7 +292,7 @@ async function createStory(scenario, childDesc, onProgress) {
         goal_category: ctx.goalCategory,
         created_at: new Date().toISOString(),
         template_id: template?.id || null,
-        cover_image: slides[0]?.image_url || null,
+        cover_image: slides[0]?.image_url || null,  // local /stories/img-*.png path
         slides
     };
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <title>Social Stories Studio</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -8,20 +8,41 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* ───────────── RESET & TOKENS ───────────── */
+        /* ─── TOKENS: LIGHT ─── */
         :root {
             --p: #5b6ef5;
             --p2: #7c3aed;
             --g: #10b981;
             --r: #f87171;
             --bg: #f0f2ff;
+            --bg2: #e8eaff;
             --card: #ffffff;
+            --card2: #f5f6ff;
             --ink: #0f172a;
+            --ink2: #1e293b;
             --muted: #64748b;
             --border: rgba(91,110,245,0.13);
+            --border2: rgba(91,110,245,0.22);
             --shadow: 0 20px 60px rgba(15,23,42,0.07);
+            --header-bg: rgba(240,242,255,0.88);
             --radius: 24px;
+            --transition: background .3s, color .3s, border .3s;
         }
+        /* ─── TOKENS: DARK ─── */
+        [data-theme="dark"] {
+            --bg: #0d0f1a;
+            --bg2: #12152a;
+            --card: #161929;
+            --card2: #1a1f35;
+            --ink: #f0f4ff;
+            --ink2: #c7d2fe;
+            --muted: #8892b0;
+            --border: rgba(91,110,245,0.2);
+            --border2: rgba(91,110,245,0.35);
+            --shadow: 0 20px 60px rgba(0,0,0,0.4);
+            --header-bg: rgba(13,15,26,0.92);
+        }
+
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
         body {
@@ -30,19 +51,21 @@
             color: var(--ink);
             min-height: 100vh;
             overflow-x: hidden;
+            transition: var(--transition);
         }
         a { color: var(--p); text-decoration: none; }
         a:hover { text-decoration: underline; }
         img { display: block; max-width: 100%; }
 
-        /* ───────────── HEADER ───────────── */
+        /* ─── HEADER ─── */
         .header {
             position: sticky; top: 0; z-index: 200;
             backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(240,242,255,0.85);
+            background: var(--header-bg);
             border-bottom: 1px solid var(--border);
             padding: 14px 28px;
             display: flex; align-items: center; justify-content: space-between; gap: 12px;
+            transition: var(--transition);
         }
         .brand {
             font-weight: 800; font-size: 17px;
@@ -51,6 +74,7 @@
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
         .brand-icon { font-size: 22px; -webkit-text-fill-color: initial; }
+        .header-right { display: flex; align-items: center; gap: 8px; }
         nav { display: flex; gap: 4px; flex-wrap: wrap; }
         nav a {
             font-size: 14px; font-weight: 500; color: var(--muted);
@@ -59,105 +83,132 @@
         }
         nav a:hover { background: rgba(91,110,245,0.1); color: var(--p); text-decoration: none; }
 
-        /* ───────────── LAYOUT ───────────── */
-        .page { max-width: 1120px; margin: 0 auto; padding: 40px 20px 100px; display: flex; flex-direction: column; gap: 28px; }
-        .card { background: var(--card); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); }
+        /* ─── DARK MODE TOGGLE ─── */
+        .theme-toggle {
+            width: 44px; height: 26px; border-radius: 999px;
+            background: var(--card2); border: 1.5px solid var(--border2);
+            cursor: pointer; position: relative;
+            transition: background .3s, border .3s;
+            flex-shrink: 0; display: flex; align-items: center; padding: 3px;
+        }
+        .theme-toggle::after {
+            content: '';
+            width: 18px; height: 18px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--p2), var(--p));
+            transition: transform .3s cubic-bezier(.4,0,.2,1);
+            box-shadow: 0 2px 6px rgba(91,110,245,0.4);
+        }
+        [data-theme="dark"] .theme-toggle::after { transform: translateX(18px); }
+        .theme-icon { position: absolute; font-size: 10px; transition: opacity .3s; pointer-events: none; }
+        .theme-icon-sun { left: 5px; opacity: 1; }
+        .theme-icon-moon { right: 5px; opacity: 0; }
+        [data-theme="dark"] .theme-icon-sun { opacity: 0; }
+        [data-theme="dark"] .theme-icon-moon { opacity: 1; }
 
-        /* ───────────── HERO ───────────── */
+        /* ─── LAYOUT ─── */
+        .page { max-width: 1120px; margin: 0 auto; padding: 40px 20px 100px; display: flex; flex-direction: column; gap: 28px; }
+        .card { background: var(--card); border-radius: var(--radius); padding: 36px; box-shadow: var(--shadow); border: 1px solid var(--border); transition: var(--transition); }
+
+        /* ─── HERO ─── */
         .hero {
-            background: linear-gradient(145deg, #0f172a 0%, #1e1b4b 60%, #312e81 100%);
+            background: linear-gradient(145deg, #080c1a 0%, #0d1340 60%, #1a0e3a 100%);
             color: white; border-radius: var(--radius);
             padding: 60px 48px; position: relative; overflow: hidden;
         }
         .hero::before {
-            content: '';
-            position: absolute; inset: 0;
-            background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(124,58,237,0.35), transparent);
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 70% 50%, rgba(124,58,237,0.4), transparent);
             pointer-events: none;
         }
-        .hero-inner { position: relative; display: grid; grid-template-columns: 1fr 380px; gap: 48px; align-items: center; }
+        .hero::after {
+            content: ''; position: absolute;
+            width: 600px; height: 600px; border-radius: 50%;
+            background: radial-gradient(circle, rgba(91,110,245,0.15), transparent 70%);
+            top: -200px; right: -200px; pointer-events: none;
+        }
+        .hero-inner { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: center; }
         .hero-eyebrow {
             display: inline-flex; align-items: center; gap: 8px;
-            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
             padding: 6px 14px; border-radius: 999px;
-            font-size: 13px; font-weight: 500; color: #c7d2fe;
-            margin-bottom: 20px;
+            font-size: 13px; font-weight: 500; color: #c7d2fe; margin-bottom: 20px;
         }
-        .hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: #818cf8; display: block; }
-        .hero h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 18px; letter-spacing: -1px; }
-        .hero h1 em { font-style: normal; background: linear-gradient(90deg, #818cf8, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-eyebrow span { width: 6px; height: 6px; border-radius: 50%; background: #818cf8; display: block; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.5;transform:scale(1.3)} }
+        .hero h1 { font-size: 48px; font-weight: 800; line-height: 1.1; margin-bottom: 18px; letter-spacing: -1.5px; color: white; }
+        .hero h1 em { font-style: normal; background: linear-gradient(90deg, #818cf8, #a78bfa, #c4b5fd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero-sub { font-size: 17px; color: #94a3b8; line-height: 1.7; margin-bottom: 32px; max-width: 440px; }
         .hero-ctas { display: flex; gap: 12px; flex-wrap: wrap; }
         .btn { padding: 13px 26px; border-radius: 999px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: transform .2s, box-shadow .2s, background .2s; display: inline-flex; align-items: center; gap: 8px; }
         .btn:active { transform: scale(0.97) !important; }
-        .btn-hero { background: white; color: var(--ink); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
-        .btn-hero:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,0.25); }
-        .btn-ghost { background: rgba(255,255,255,0.12); color: white; border: 1px solid rgba(255,255,255,0.2); }
-        .btn-ghost:hover { background: rgba(255,255,255,0.2); transform: translateY(-2px); }
-        .hero-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; }
-        .stat { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 16px; text-align: center; backdrop-filter: blur(8px); }
-        .stat-num { font-size: 26px; font-weight: 800; color: #a78bfa; }
-        .stat-label { font-size: 12px; color: #94a3b8; margin-top: 4px; }
-        .hero-badges { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
-        .hero-badge { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 10px 14px; font-size: 13px; color: #cbd5e1; }
-        .hero-badge-icon { font-size: 18px; width: 32px; text-align: center; }
+        .btn-hero { background: white; color: #0f172a; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+        .btn-hero:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(0,0,0,0.35); }
+        .btn-ghost { background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); }
+        .btn-ghost:hover { background: rgba(255,255,255,0.18); transform: translateY(-2px); }
+        .hero-stats { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 32px; }
+        .stat { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 18px; padding: 18px; text-align: center; backdrop-filter: blur(8px); transition: background .2s; }
+        .stat:hover { background: rgba(255,255,255,0.1); }
+        .stat-num { font-size: 28px; font-weight: 800; background: linear-gradient(135deg,#818cf8,#a78bfa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .stat-label { font-size: 12px; color: #94a3b8; margin-top: 4px; font-weight: 500; }
+        .hero-badges { display: flex; flex-direction: column; gap: 10px; }
+        .hero-badge {
+            display: flex; align-items: center; gap: 12px;
+            background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 14px; padding: 12px 16px; font-size: 14px; color: #cbd5e1;
+            transition: background .2s, border .2s;
+        }
+        .hero-badge:hover { background: rgba(255,255,255,0.09); border-color: rgba(129,140,248,0.3); }
+        .hero-badge-icon { font-size: 20px; width: 32px; text-align: center; flex-shrink: 0; }
 
-        /* ───────────── HOW IT WORKS ───────────── */
-        .how-header { text-align: center; margin-bottom: 32px; }
-        .section-label { font-size: 12px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--p); margin-bottom: 10px; }
-        .section-title { font-size: 30px; font-weight: 800; margin-bottom: 10px; }
-        .section-sub { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 520px; margin: 0 auto; }
-        .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
-        .step {
-            background: #f8f9ff; border-radius: 20px; padding: 28px;
-            border: 1px solid var(--border); position: relative;
-            transition: transform .2s, box-shadow .2s;
-        }
-        .step:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(91,110,245,0.12); }
-        .step-num {
-            width: 40px; height: 40px; border-radius: 12px;
-            background: linear-gradient(135deg, var(--p2), var(--p));
-            color: white; font-size: 15px; font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 16px;
-        }
-        .step h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-        .step p { font-size: 14px; color: var(--muted); line-height: 1.7; }
-        .step-connector {
-            position: absolute; top: 32px; right: -14px;
-            width: 28px; height: 2px; background: var(--border); z-index: 1;
-        }
+        /* ─── SECTION HEADERS ─── */
+        .sec-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--p); margin-bottom: 8px; }
+        .sec-title { font-size: 28px; font-weight: 800; margin-bottom: 10px; color: var(--ink); }
+        .sec-sub { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 520px; }
 
-        /* ───────────── GENERATOR ───────────── */
+        /* ─── BENTO: HOW IT WORKS ─── */
+        .bento-how { display: grid; grid-template-columns: repeat(3,1fr); grid-template-rows: auto; gap: 16px; margin-top: 28px; }
+        .bento-cell {
+            background: var(--card2); border-radius: 20px; padding: 28px;
+            border: 1.5px solid var(--border);
+            transition: transform .25s, box-shadow .25s, border .25s, var(--transition);
+            cursor: default; position: relative; overflow: hidden;
+        }
+        .bento-cell:hover { transform: translateY(-5px); box-shadow: 0 20px 48px rgba(91,110,245,0.14); border-color: var(--p); }
+        .bento-cell::before {
+            content: attr(data-num);
+            position: absolute; top: -10px; right: 16px;
+            font-size: 72px; font-weight: 900; opacity: 0.05;
+            color: var(--p); line-height: 1; pointer-events: none;
+        }
+        .bento-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+        .bento-cell h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; color: var(--ink); }
+        .bento-cell p { font-size: 14px; color: var(--muted); line-height: 1.7; }
+        .bento-cell.wide { grid-column: span 2; }
+        .bento-cell.tall { display: flex; flex-direction: column; justify-content: space-between; }
+        .bento-pill { display: inline-flex; align-items: center; gap: 6px; background: rgba(91,110,245,0.1); color: var(--p); border: 1px solid rgba(91,110,245,0.2); border-radius: 999px; font-size: 12px; font-weight: 600; padding: 4px 12px; margin-top: 12px; }
+
+        /* ─── GENERATOR ─── */
         .gen-layout { display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
-        .gen-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+        .gen-title { font-size: 22px; font-weight: 800; margin-bottom: 6px; color: var(--ink); }
         .gen-sub { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
-
-        /* Chips */
-        .chips-label { font-size: 12px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+        .chips-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
         .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
         .chip {
-            padding: 7px 16px; border-radius: 999px;
-            font-size: 13px; font-weight: 500;
-            background: #eff0ff; color: var(--p);
-            border: 1.5px solid transparent; cursor: pointer;
-            transition: all .2s;
+            padding: 7px 16px; border-radius: 999px; font-size: 13px; font-weight: 500;
+            background: var(--card2); color: var(--p); border: 1.5px solid var(--border2);
+            cursor: pointer; transition: all .2s;
         }
-        .chip:hover, .chip.active { background: var(--p); color: white; border-color: var(--p); transform: translateY(-1px); }
-
-        /* Form */
+        .chip:hover, .chip.active { background: var(--p); color: white; border-color: var(--p); transform: translateY(-1px); box-shadow: 0 6px 16px rgba(91,110,245,0.3); }
         .form-group { margin-bottom: 18px; }
-        .form-label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 7px; }
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: var(--ink2); margin-bottom: 7px; }
         .form-input {
-            width: 100%; padding: 14px 16px;
-            border-radius: 16px; border: 2px solid #e0e7ff;
-            font-size: 15px; font-family: inherit;
-            background: #fafaff; color: var(--ink);
-            transition: border .2s, box-shadow .2s; outline: none;
+            width: 100%; padding: 14px 16px; border-radius: 16px;
+            border: 2px solid var(--border2); font-size: 15px; font-family: inherit;
+            background: var(--card2); color: var(--ink);
+            transition: border .2s, box-shadow .2s, var(--transition); outline: none;
         }
-        .form-input:focus { border-color: var(--p); box-shadow: 0 0 0 4px rgba(91,110,245,0.1); }
+        .form-input:focus { border-color: var(--p); box-shadow: 0 0 0 4px rgba(91,110,245,0.12); }
         textarea.form-input { min-height: 100px; resize: vertical; }
-
         .btn-generate {
             width: 100%; padding: 16px;
             background: linear-gradient(135deg, var(--p2), var(--p));
@@ -167,142 +218,121 @@
             transition: transform .2s, box-shadow .2s;
             display: flex; align-items: center; justify-content: center; gap: 8px;
         }
-        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(91,110,245,0.45); }
+        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(91,110,245,0.5); }
         .btn-generate:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-
-        /* Progress */
-        .progress-box {
-            display: none; margin-top: 20px; padding: 20px;
-            background: #f8f9ff; border-radius: 16px; border: 1.5px solid #e0e7ff;
-        }
+        .progress-box { display: none; margin-top: 20px; padding: 20px; background: var(--card2); border-radius: 16px; border: 1.5px solid var(--border); }
         .progress-steps { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
         .progress-step { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
         .progress-step.active { color: var(--p); font-weight: 600; }
         .progress-step.done { color: var(--g); }
-        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: #d1d5db; flex-shrink: 0; transition: background .3s; }
+        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border2); flex-shrink: 0; transition: background .3s; }
         .progress-step.active .step-dot { background: var(--p); box-shadow: 0 0 0 3px rgba(91,110,245,0.2); }
         .progress-step.done .step-dot { background: var(--g); }
-        .progress-track { height: 8px; background: #e0e7ff; border-radius: 999px; overflow: hidden; }
+        .progress-track { height: 8px; background: var(--bg2); border-radius: 999px; overflow: hidden; }
         .progress-fill { height: 100%; width: 0%; border-radius: 999px; background: linear-gradient(90deg, var(--p2), var(--p)); transition: width .5s cubic-bezier(.4,0,.2,1); }
-
-        /* Result */
         .result-box { display: none; margin-top: 20px; }
-        .result-card { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 1.5px solid #6ee7b7; border-radius: 20px; padding: 24px; }
+        .result-card { background: linear-gradient(135deg,#ecfdf5,#d1fae5); border: 1.5px solid #6ee7b7; border-radius: 20px; padding: 24px; }
+        [data-theme="dark"] .result-card { background: linear-gradient(135deg,#052e16,#064e3b); border-color: #065f46; }
         .result-card h4 { color: #065f46; font-size: 16px; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        [data-theme="dark"] .result-card h4 { color: #6ee7b7; }
         .result-links { display: flex; flex-direction: column; gap: 10px; }
-        .btn-result { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: white; }
+        .btn-result { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 12px; font-weight: 600; font-size: 14px; color: white; transition: opacity .2s, transform .2s; }
+        .btn-result:hover { opacity: 0.9; transform: translateY(-1px); text-decoration: none; }
         .btn-result.primary { background: var(--g); box-shadow: 0 6px 18px rgba(16,185,129,0.35); }
         .btn-result.secondary { background: #6b7280; }
-        .btn-result:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        /* Profiles Panel */
-        .profiles-card { background: #f8f9ff; border-radius: 20px; padding: 22px; border: 1.5px solid var(--border); }
-        .profiles-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+        .profiles-card { background: var(--card2); border-radius: 20px; padding: 22px; border: 1.5px solid var(--border); transition: var(--transition); }
+        .profiles-card h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; color: var(--ink); }
         .profile-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; min-height: 40px; }
-        .profile-item {
-            padding: 10px 14px; background: white; border: 1.5px solid var(--border);
-            border-radius: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center;
-            transition: border .2s, box-shadow .2s;
-        }
+        .profile-item { padding: 10px 14px; background: var(--card); border: 1.5px solid var(--border); border-radius: 14px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: border .2s, box-shadow .2s; }
         .profile-item:hover { border-color: var(--p); box-shadow: 0 4px 12px rgba(91,110,245,0.1); }
-        .profile-name { font-weight: 600; font-size: 13px; }
+        .profile-name { font-weight: 600; font-size: 13px; color: var(--ink); }
         .profile-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
-        .profile-del { background: none; border: none; color: #fca5a5; cursor: pointer; font-size: 16px; padding: 2px 4px; border-radius: 6px; transition: background .2s; }
-        .profile-del:hover { background: #fee2e2; }
-        .profile-empty { font-size: 13px; color: var(--muted); text-align: center; padding: 16px; background: white; border-radius: 12px; border: 1.5px dashed #d1d5db; }
-        .btn-save-profile {
-            width: 100%; padding: 10px; border-radius: 12px;
-            background: white; color: var(--p); border: 1.5px solid var(--p);
-            font-weight: 600; font-size: 13px; cursor: pointer; transition: background .2s;
-        }
-        .btn-save-profile:hover { background: #eff0ff; }
+        .profile-del { background: none; border: none; color: #fca5a5; cursor: pointer; font-size: 16px; padding: 2px 4px; border-radius: 6px; }
+        .profile-del:hover { background: rgba(248,113,113,0.1); }
+        .profile-empty { font-size: 13px; color: var(--muted); text-align: center; padding: 16px; background: var(--card); border-radius: 12px; border: 1.5px dashed var(--border2); }
+        .btn-save-profile { width: 100%; padding: 10px; border-radius: 12px; background: var(--card); color: var(--p); border: 1.5px solid var(--p); font-weight: 600; font-size: 13px; cursor: pointer; transition: background .2s; }
+        .btn-save-profile:hover { background: rgba(91,110,245,0.08); }
 
-        /* ───────────── LIBRARY ───────────── */
+        /* ─── LIBRARY ─── */
         .lib-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-        .lib-search { padding: 10px 16px; border-radius: 999px; border: 1.5px solid var(--border); font-size: 14px; font-family: inherit; outline: none; min-width: 200px; background: #fafaff; transition: border .2s; }
+        .lib-search { padding: 10px 16px; border-radius: 999px; border: 1.5px solid var(--border2); font-size: 14px; font-family: inherit; outline: none; min-width: 200px; background: var(--card2); color: var(--ink); transition: border .2s, var(--transition); }
         .lib-search:focus { border-color: var(--p); }
         .lib-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px,1fr)); gap: 18px; }
-        .story-card {
-            background: white; border-radius: 20px; overflow: hidden;
-            border: 1.5px solid var(--border);
-            transition: transform .2s, box-shadow .2s;
-            display: flex; flex-direction: column;
-        }
-        .story-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(15,23,42,0.1); }
+        .story-card { background: var(--card); border-radius: 20px; overflow: hidden; border: 1.5px solid var(--border); transition: transform .2s, box-shadow .2s, var(--transition); display: flex; flex-direction: column; }
+        .story-card:hover { transform: translateY(-5px); box-shadow: 0 20px 50px rgba(15,23,42,0.12); }
+        [data-theme="dark"] .story-card:hover { box-shadow: 0 20px 50px rgba(0,0,0,0.4); }
         .story-thumb { width: 100%; height: 155px; object-fit: cover; }
-        .story-thumb-ph { width: 100%; height: 155px; background: linear-gradient(135deg, #e0e7ff, #ede9fe); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        .story-thumb-ph { width: 100%; height: 155px; background: linear-gradient(135deg, var(--bg2), var(--card2)); display: flex; align-items: center; justify-content: center; font-size: 40px; }
         .story-body { padding: 14px; flex: 1; display: flex; flex-direction: column; }
-        .story-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .story-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: var(--ink); }
         .story-meta { font-size: 12px; color: var(--muted); margin-bottom: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .story-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 12px; flex: 1; }
-        .tag { font-size: 11px; padding: 2px 9px; border-radius: 999px; background: #eff0ff; color: var(--p); font-weight: 500; }
-        .tag.green { background: #d1fae5; color: #065f46; }
-        .btn-view {
-            display: block; text-align: center; padding: 9px;
-            background: var(--p); color: white;
-            border-radius: 12px; font-weight: 600; font-size: 13px;
-            transition: background .2s;
-        }
-        .btn-view:hover { background: var(--p2); text-decoration: none; }
+        .tag { font-size: 11px; padding: 2px 9px; border-radius: 999px; background: rgba(91,110,245,0.1); color: var(--p); font-weight: 500; }
+        .tag.green { background: rgba(16,185,129,0.1); color: #059669; }
+        [data-theme="dark"] .tag.green { color: #34d399; }
+        .btn-view { display: block; text-align: center; padding: 9px; background: var(--p); color: white; border-radius: 12px; font-weight: 600; font-size: 13px; transition: background .2s, transform .2s; }
+        .btn-view:hover { background: var(--p2); text-decoration: none; transform: translateY(-1px); }
         .lib-empty { grid-column: 1/-1; text-align: center; padding: 60px 20px; }
         .lib-empty-icon { font-size: 52px; margin-bottom: 16px; }
         .lib-empty p { color: var(--muted); font-size: 15px; }
 
-        /* ───────────── RESEARCH ───────────── */
-        .research-list { display: grid; gap: 14px; }
-        .research-item {
-            padding: 20px; background: #fafaff; border-radius: 18px;
-            border: 1.5px solid var(--border); display: flex; gap: 16px; align-items: flex-start;
-            transition: border .2s;
+        /* ─── BENTO: RESEARCH ─── */
+        .bento-research { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-top: 28px; }
+        .res-cell {
+            background: var(--card2); border-radius: 20px; padding: 24px;
+            border: 1.5px solid var(--border);
+            transition: transform .25s, box-shadow .25s, border .25s, var(--transition);
+            display: flex; flex-direction: column; gap: 10px; cursor: pointer;
         }
-        .research-item:hover { border-color: var(--p); }
-        .research-icon { font-size: 24px; flex-shrink: 0; margin-top: 2px; }
-        .research-content strong { font-size: 15px; font-weight: 700; display: block; margin-bottom: 5px; }
-        .research-content p { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 8px; }
-        .research-link { font-size: 13px; font-weight: 600; }
+        .res-cell:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(91,110,245,0.12); border-color: var(--p); }
+        .res-cell:nth-child(1) { grid-column: span 2; }
+        .res-icon { font-size: 28px; }
+        .res-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--p); }
+        .res-title { font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.4; }
+        .res-desc { font-size: 13px; color: var(--muted); line-height: 1.7; flex: 1; }
+        .res-link { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 600; color: var(--p); margin-top: auto; }
+        .res-link:hover { text-decoration: underline; }
 
-        /* ───────────── TOAST ───────────── */
-        #toast {
-            position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px);
-            background: var(--ink); color: white;
-            padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 500;
-            z-index: 9999; transition: transform .3s cubic-bezier(.4,0,.2,1), opacity .3s;
-            opacity: 0; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-        }
+        /* ─── TOAST ─── */
+        #toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--ink); color: var(--bg); padding: 12px 24px; border-radius: 999px; font-size: 14px; font-weight: 500; z-index: 9999; transition: transform .3s cubic-bezier(.4,0,.2,1), opacity .3s; opacity: 0; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.25); }
         #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 
-        /* ───────────── FOOTER ───────────── */
+        /* ─── FOOTER ─── */
         footer { text-align: center; color: var(--muted); font-size: 13px; padding: 20px; }
 
-        /* ───────────── ANIMATIONS ───────────── */
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
         .fade-up { animation: fadeUp .5s ease both; }
-        .delay-1 { animation-delay: .1s; }
-        .delay-2 { animation-delay: .2s; }
-        .delay-3 { animation-delay: .3s; }
+        .delay-1 { animation-delay: .15s; }
+        .delay-2 { animation-delay: .3s; }
 
-        /* ───────────── RESPONSIVE ───────────── */
-        @media (max-width: 960px) {
+        /* ─── RESPONSIVE ─── */
+        @media(max-width:960px) {
             .hero-inner { grid-template-columns: 1fr; }
-            .hero { padding: 44px 32px; }
+            .hero { padding: 44px 30px; }
             .hero h1 { font-size: 36px; }
-            .steps { grid-template-columns: 1fr 1fr; }
-            .step-connector { display: none; }
+            .bento-how { grid-template-columns: 1fr 1fr; }
+            .bento-cell.wide { grid-column: span 2; }
             .gen-layout { grid-template-columns: 1fr; }
+            .bento-research { grid-template-columns: 1fr 1fr; }
+            .res-cell:nth-child(1) { grid-column: span 2; }
         }
-        @media (max-width: 640px) {
-            .page { padding: 24px 14px 80px; gap: 18px; }
+        @media(max-width:640px) {
+            .page { padding: 22px 14px 80px; gap: 18px; }
             .card { padding: 24px; border-radius: 20px; }
-            .hero { padding: 32px 24px; border-radius: 20px; }
+            .hero { padding: 30px 22px; }
             .hero h1 { font-size: 28px; }
             .hero-ctas { flex-direction: column; }
-            .btn-hero, .btn-ghost { width: 100%; justify-content: center; }
+            .btn-hero,.btn-ghost { width: 100%; justify-content: center; }
             .hero-stats { grid-template-columns: repeat(3,1fr); gap: 8px; }
-            .stat-num { font-size: 20px; }
-            .steps { grid-template-columns: 1fr; }
+            .stat { padding: 12px; }
+            .stat-num { font-size: 22px; }
+            .bento-how { grid-template-columns: 1fr; }
+            .bento-cell.wide { grid-column: span 1; }
+            .bento-research { grid-template-columns: 1fr; }
+            .res-cell:nth-child(1) { grid-column: span 1; }
             .header { padding: 12px 16px; }
-            nav a { padding: 6px 10px; font-size: 13px; }
-            .section-title { font-size: 24px; }
+            nav a { padding: 6px 10px; font-size: 12px; }
         }
     </style>
 </head>
@@ -311,11 +341,17 @@
 <!-- HEADER -->
 <header class="header">
     <div class="brand"><span class="brand-icon">⚡</span>Social Stories Studio</div>
-    <nav>
-        <a href="#generate">Generate</a>
-        <a href="#library">Library</a>
-        <a href="#research">Research</a>
-    </nav>
+    <div class="header-right">
+        <nav>
+            <a href="#generate">Generate</a>
+            <a href="#library">Library</a>
+            <a href="#research">Research</a>
+        </nav>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+            <span class="theme-icon theme-icon-sun">☀️</span>
+            <span class="theme-icon theme-icon-moon">🌙</span>
+        </button>
+    </div>
 </header>
 
 <main class="page">
@@ -328,10 +364,10 @@
                 <h1>Stories that rehearse <em>courage.</em></h1>
                 <p class="hero-sub">AI-powered social stories for autistic children — with sensory previews, coping scripts, and caregiver coaching built into every slide.</p>
                 <div class="hero-ctas">
-                    <button class="btn btn-hero" onclick="scrollTo('generate')">✨ Create a Story</button>
-                    <button class="btn btn-ghost" onclick="scrollTo('library')">📚 Story Library</button>
+                    <button class="btn btn-hero" onclick="goTo('generate')">✨ Create a Story</button>
+                    <button class="btn btn-ghost" onclick="goTo('library')">📚 Story Library</button>
                 </div>
-                <div class="hero-stats" style="margin-top:32px;">
+                <div class="hero-stats">
                     <div class="stat"><div class="stat-num">6</div><div class="stat-label">Story Steps</div></div>
                     <div class="stat"><div class="stat-num">5+</div><div class="stat-label">Studies Cited</div></div>
                     <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Scenarios</div></div>
@@ -340,7 +376,7 @@
             <div class="fade-up delay-2">
                 <div class="hero-badges">
                     <div class="hero-badge"><span class="hero-badge-icon">🧠</span>Carol Gray Social Stories™ 10.2 criteria</div>
-                    <div class="hero-badge"><span class="hero-badge-icon">🎨</span>AI-generated calm illustrations per slide</div>
+                    <div class="hero-badge"><span class="hero-badge-icon">🎨</span>AI illustrations saved locally — never expire</div>
                     <div class="hero-badge"><span class="hero-badge-icon">🔊</span>Narrated audio for every story</div>
                     <div class="hero-badge"><span class="hero-badge-icon">📋</span>Caregiver coaching tip on each scene</div>
                     <div class="hero-badge"><span class="hero-badge-icon">🌱</span>Future nonprofit access for all families</div>
@@ -349,30 +385,41 @@
         </div>
     </section>
 
-    <!-- HOW IT WORKS -->
-    <section class="card fade-up">
-        <div class="how-header">
-            <div class="section-label">Process</div>
-            <div class="section-title">How it works</div>
-            <p class="section-sub">Three steps to a full therapeutic story with visuals, narration, and caregiver notes.</p>
-        </div>
-        <div class="steps">
-            <div class="step">
-                <div class="step-num">1</div>
+    <!-- HOW IT WORKS — BENTO -->
+    <section class="card fade-up delay-1">
+        <div class="sec-label">Process</div>
+        <div class="sec-title">How it works</div>
+        <p class="sec-sub">Three steps to a full therapeutic story with visuals, narration, and caregiver notes.</p>
+
+        <div class="bento-how">
+            <div class="bento-cell wide" data-num="1">
+                <span class="bento-icon">🎯</span>
                 <h4>Choose a scenario</h4>
-                <p>Pick a preset or describe any real-life moment. Curated templates skip the AI wait entirely.</p>
-                <div class="step-connector"></div>
+                <p>Pick from 10 preset chips (dentist, haircut, fire drill…) or describe any situation in your own words. Curated templates skip AI generation entirely for instant results.</p>
+                <span class="bento-pill">⚡ Instant for presets</span>
             </div>
-            <div class="step">
-                <div class="step-num">2</div>
+            <div class="bento-cell" data-num="2">
+                <span class="bento-icon">👧</span>
                 <h4>Personalize the child</h4>
-                <p>Save child profiles with name, age, interests, and sensory notes. Reuse in one tap next time.</p>
-                <div class="step-connector"></div>
+                <p>Save child profiles with name, age, interests, and sensory notes. One tap loads them instantly.</p>
+                <span class="bento-pill">💾 Saved locally</span>
             </div>
-            <div class="step">
-                <div class="step-num">3</div>
-                <h4>Share & rehearse</h4>
-                <p>Open the slideshow, play the narration, and follow caregiver tips before the real event.</p>
+            <div class="bento-cell" data-num="3">
+                <span class="bento-icon">🔊</span>
+                <h4>Narration included</h4>
+                <p>Every story gets an AI-narrated audio track using a calm, child-friendly voice.</p>
+                <span class="bento-pill">🎙 Alloy voice</span>
+            </div>
+            <div class="bento-cell" data-num="4">
+                <span class="bento-icon">📖</span>
+                <h4>Swipeable slideshow</h4>
+                <p>Stories open as interactive slideshows with swipe support for tablets — ready to share with children immediately.</p>
+            </div>
+            <div class="bento-cell wide" data-num="5">
+                <span class="bento-icon">🏥</span>
+                <h4>Evidence-aligned structure</h4>
+                <p>Every story follows a 6-step framework: Expectation → Sensory Preview → Transition → Coping → Outcome → Reinforcement. Caregiver tips on every slide. Built to match real occupational therapy practice.</p>
+                <span class="bento-pill">✅ Carol Gray ratio enforced</span>
             </div>
         </div>
     </section>
@@ -382,7 +429,7 @@
         <div class="gen-layout">
             <div>
                 <div class="gen-title">✨ Generate a story</div>
-                <p class="gen-sub">Curated scenarios are instant. Custom inputs use GPT-4o-mini with smart caching to save cost.</p>
+                <p class="gen-sub">Curated scenarios are instant. Custom inputs use GPT-4o-mini + smart caching to reduce cost.</p>
 
                 <div class="form-group">
                     <div class="chips-label">Quick scenarios</div>
@@ -403,10 +450,9 @@
                     <span id="genBtnText">Generate story 🪄</span>
                 </button>
 
-                <!-- PROGRESS -->
                 <div class="progress-box" id="progressBox">
-                    <div class="progress-steps" id="progressSteps">
-                        <div class="progress-step" id="pStep0"><span class="step-dot"></span>Writing script...</div>
+                    <div class="progress-steps">
+                        <div class="progress-step" id="pStep0"><span class="step-dot"></span>Writing story script...</div>
                         <div class="progress-step" id="pStep1"><span class="step-dot"></span>Generating illustrations...</div>
                         <div class="progress-step" id="pStep2"><span class="step-dot"></span>Creating narration...</div>
                         <div class="progress-step" id="pStep3"><span class="step-dot"></span>Building slideshow...</div>
@@ -414,7 +460,6 @@
                     <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
                 </div>
 
-                <!-- RESULT -->
                 <div class="result-box" id="resultBox">
                     <div class="result-card">
                         <h4>🎉 Story is ready!</h4>
@@ -438,8 +483,8 @@
     <section class="card" id="library">
         <div class="lib-header">
             <div>
-                <div class="section-label">Archive</div>
-                <div class="section-title" style="margin-bottom:0">Story Library</div>
+                <div class="sec-label">Archive</div>
+                <div class="sec-title" style="margin-bottom:0">Story Library</div>
             </div>
             <input class="lib-search" id="libSearch" placeholder="🔍  Search stories..." oninput="filterLibrary(this.value)" />
         </div>
@@ -448,54 +493,48 @@
         </div>
     </section>
 
-    <!-- RESEARCH -->
+    <!-- RESEARCH — BENTO -->
     <section class="card" id="research">
-        <div class="how-header">
-            <div class="section-label">Evidence Base</div>
-            <div class="section-title">Research & Studies</div>
-            <p class="section-sub">Templates follow best practices from peer-reviewed Social Stories™ literature.</p>
-        </div>
-        <div class="research-list">
-            <div class="research-item">
-                <span class="research-icon">🔬</span>
-                <div class="research-content">
-                    <strong>Scoping review: Social Stories supporting behavior change (2023)</strong>
-                    <p>J Occup Ther Sch Early Interv — 56 studies grouped by "reduce disruptive" vs "increase desired" goals. Highlights sensory previews + coping rehearsal as key efficacy factors.</p>
-                    <a class="research-link" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11263915/" target="_blank">Read summary →</a>
-                </div>
-            </div>
-            <div class="research-item">
-                <span class="research-icon">🏫</span>
-                <div class="research-content">
-                    <strong>ASSSIST-2 RCT: Social Stories™ in UK primary schools (2024–25)</strong>
-                    <p>Health Technol Assess — pragmatic cluster trial showing individual socio-emotional goals improve with high-fidelity, teacher co-authored, personalized stories across 4–6 read-throughs.</p>
-                    <a class="research-link" href="https://www.ncbi.nlm.nih.gov/books/NBK606433/" target="_blank">Read summary →</a>
-                </div>
-            </div>
-            <div class="research-item">
-                <span class="research-icon">💰</span>
-                <div class="research-content">
-                    <strong>Cost–utility analysis of Social Stories™ (2024)</strong>
-                    <p>BJPsych Open — demonstrates a favorable cost-per-outcome ratio compared to other supports in mainstream schools, supporting digital delivery platforms.</p>
-                    <a class="research-link" href="https://www.cambridge.org/core/journals/bjpsych-open" target="_blank">Read summary →</a>
-                </div>
-            </div>
-            <div class="research-item">
-                <span class="research-icon">📚</span>
-                <div class="research-content">
-                    <strong>Social Story research scoping study — 17 literature reviews (2021)</strong>
-                    <p>Review Journal of Autism & Developmental Disorders — synthesizes Gray sentence ratios, cooperative sentences, and implementation fidelity requirements.</p>
-                    <a class="research-link" href="https://link.springer.com/article/10.1007/s40489-020-00235-6" target="_blank">Read summary →</a>
-                </div>
-            </div>
-            <div class="research-item">
-                <span class="research-icon">🎓</span>
-                <div class="research-content">
-                    <strong>Effectiveness of Social Stories as behavior intervention (2022)</strong>
-                    <p>St. Cloud State University — 13 case studies covering dentist visits, haircuts, transitions with measurable outcomes across age groups.</p>
-                    <a class="research-link" href="https://repository.stcloudstate.edu/sped_etds/155/" target="_blank">Read summary →</a>
-                </div>
-            </div>
+        <div class="sec-label">Evidence Base</div>
+        <div class="sec-title">Research & Studies</div>
+        <p class="sec-sub">Templates follow best practices from these peer-reviewed Social Stories™ studies.</p>
+
+        <div class="bento-research">
+            <a class="res-cell" href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11263915/" target="_blank" style="text-decoration:none">
+                <span class="res-icon">🔬</span>
+                <div class="res-label">Scoping Review · 2023</div>
+                <div class="res-title">Social Stories supporting behavior change for individuals with Autism</div>
+                <div class="res-desc">56 studies grouped by "reduce disruptive" vs "increase desired" goals. Highlights sensory previews + coping rehearsal as key efficacy factors. J Occup Ther Sch Early Interv.</div>
+                <span class="res-link">Read paper →</span>
+            </a>
+            <a class="res-cell" href="https://www.ncbi.nlm.nih.gov/books/NBK606433/" target="_blank" style="text-decoration:none">
+                <span class="res-icon">🏫</span>
+                <div class="res-label">RCT · 2024–25</div>
+                <div class="res-title">ASSSIST-2: Social Stories™ in UK primary schools</div>
+                <div class="res-desc">Pragmatic cluster trial showing co-authored stories improve socio-emotional goals over 4–6 sessions.</div>
+                <span class="res-link">Read paper →</span>
+            </a>
+            <a class="res-cell" href="https://www.cambridge.org/core/journals/bjpsych-open" target="_blank" style="text-decoration:none">
+                <span class="res-icon">💰</span>
+                <div class="res-label">Cost Analysis · 2024</div>
+                <div class="res-title">Cost–utility of Social Stories™ vs alternatives</div>
+                <div class="res-desc">Favorable cost-per-outcome ratio supports digital delivery platforms like this one. BJPsych Open.</div>
+                <span class="res-link">Read paper →</span>
+            </a>
+            <a class="res-cell" href="https://link.springer.com/article/10.1007/s40489-020-00235-6" target="_blank" style="text-decoration:none">
+                <span class="res-icon">📚</span>
+                <div class="res-label">Meta-review · 2021</div>
+                <div class="res-title">17 Literature Reviews Synthesized</div>
+                <div class="res-desc">Gray sentence ratios, cooperative sentences, and fidelity requirements distilled from 25+ years of research.</div>
+                <span class="res-link">Read paper →</span>
+            </a>
+            <a class="res-cell" href="https://repository.stcloudstate.edu/sped_etds/155/" target="_blank" style="text-decoration:none">
+                <span class="res-icon">🎓</span>
+                <div class="res-label">Thesis · 2022</div>
+                <div class="res-title">Social Stories as behavior intervention</div>
+                <div class="res-desc">13 case studies covering dentist visits, haircuts, and transitions with measurable outcomes.</div>
+                <span class="res-link">Read paper →</span>
+            </a>
         </div>
     </section>
 
@@ -505,13 +544,27 @@
 <div id="toast"></div>
 
 <script>
+// ── THEME TOGGLE ─────────────────────────────────────────
+const html = document.documentElement;
+const saved = localStorage.getItem('ss_theme') || 'light';
+html.setAttribute('data-theme', saved);
+
+document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('ss_theme', next);
+    toast(next === 'dark' ? '🌙 Dark mode on' : '☀️ Light mode on');
+});
+
 // ── UTILS ────────────────────────────────────────────────
-function scrollTo(id) { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+function goTo(id) { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 function uid() { return Math.random().toString(36).substring(2, 10); }
-function toast(msg, duration = 3000) {
+let toastTimer;
+function toast(msg, duration = 2500) {
     const el = document.getElementById('toast');
     el.textContent = msg; el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), duration);
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), duration);
 }
 
 // ── CHIPS ────────────────────────────────────────────────
@@ -548,7 +601,6 @@ function renderProfiles() {
             <button class="profile-del" onclick="event.stopPropagation();deleteProfile('${p.id}')" title="Remove">✕</button>
         </div>`).join('');
 }
-
 function saveProfile() {
     const desc = document.getElementById('childInput').value.trim();
     if (!desc) { toast('⚠️ Enter a child description first.'); return; }
@@ -560,23 +612,20 @@ function saveProfile() {
     renderProfiles();
     toast('✅ Profile saved!');
 }
-
 function loadProfile(id) {
     const p = getProfiles().find(x => x.id === id);
     if (p) { document.getElementById('childInput').value = p.description; toast('Profile loaded!'); }
 }
-
 function deleteProfile(id) {
     setProfiles(getProfiles().filter(p => p.id !== id));
     renderProfiles();
     toast('Profile removed.');
 }
-
 renderProfiles();
 
-// ── PROGRESS STEP TRACKER ────────────────────────────────
+// ── PROGRESS ─────────────────────────────────────────────
 function setProgressStep(stage, pct) {
-    const map = { script: 0, image: 1, audio: 2, html: 3 };
+    const map = { script: 0, image: 1, audio: 2, html: 3, cache: 3 };
     const idx = map[stage] ?? -1;
     document.querySelectorAll('.progress-step').forEach((el, i) => {
         el.classList.remove('active', 'done');
@@ -633,13 +682,7 @@ function generateStory() {
         evtSource.close();
         btn.disabled = false;
         document.getElementById('genBtnText').textContent = 'Generate story 🪄';
-
-        if (!data.success) {
-            fill.style.background = 'var(--r)';
-            toast('❌ ' + data.error);
-            return;
-        }
-
+        if (!data.success) { fill.style.background = 'var(--r)'; toast('❌ ' + data.error); return; }
         fill.style.width = '100%';
         setTimeout(() => { progressBox.style.display = 'none'; }, 700);
         resultBox.style.display = 'block';
@@ -671,13 +714,13 @@ function renderLibrary(stories) {
     grid.innerHTML = stories.map(s => {
         const thumb = s.cover_image || s.slides?.[0]?.image_url;
         const date = new Date(s.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
-        const badgeType = s.template_id ? '<span class="tag green">Curated</span>' : '<span class="tag">AI</span>';
+        const badge = s.template_id ? '<span class="tag green">Curated</span>' : '<span class="tag">AI</span>';
         return `<div class="story-card">
             ${thumb ? `<img src="${thumb}" class="story-thumb" loading="lazy" alt="${s.scenario}">` : `<div class="story-thumb-ph">📖</div>`}
             <div class="story-body">
                 <div class="story-title">${s.scenario}</div>
                 <div class="story-meta">For: ${s.child_description}</div>
-                <div class="story-tags">${badgeType}<span class="tag">${date}</span></div>
+                <div class="story-tags">${badge}<span class="tag">${date}</span></div>
                 <a href="/stories/story-${s.id}.html" target="_blank" class="btn-view">View Story →</a>
             </div>
         </div>`;
@@ -685,10 +728,9 @@ function renderLibrary(stories) {
 }
 
 function filterLibrary(q) {
-    const term = q.toLowerCase();
+    const t = q.toLowerCase();
     renderLibrary(allStories.filter(s =>
-        s.scenario.toLowerCase().includes(term) ||
-        s.child_description.toLowerCase().includes(term)
+        s.scenario.toLowerCase().includes(t) || s.child_description.toLowerCase().includes(t)
     ));
 }
 
